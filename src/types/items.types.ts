@@ -1,4 +1,3 @@
-// --- ESTRUTURA BASE DE HABILIDADE ATIVA ---
 import type {
   BodyPart,
   DamageLevel,
@@ -18,7 +17,6 @@ export type ActiveAbility = {
   name: string;
   description: string;
 
-  // NOVO: Define onde a habilidade atua (Essencial para o TS Engine gerenciar as salas)
   target_room: RoomTarget | null;
 
   recovery_amount: number | null;
@@ -41,15 +39,14 @@ export type ActiveAbility = {
   available_uses_in_a_run: number;
 };
 
-// --- ARMAS (Sem Habilidade Ativa, apenas Status e Mods) ---
+// --- ARMAS ---
 export type Weapon = {
   name: string;
   description: string;
   appearance: string;
   type: 'WEAPON';
 
-  // Economia e Inventário
-  buy_price: number | null; // Null se for impossível comprar (só achado)
+  buy_price: number | null;
   sell_price: number;
   slots_taken: number;
 
@@ -85,7 +82,7 @@ export type Armor = {
   mod: Mod | null;
 };
 
-// --- MODIFICADORES (Apenas Status Passivo extra para a Arma/Armadura) ---
+// --- MODIFICADORES ---
 export type Mod = {
   name: string;
   description: string;
@@ -96,10 +93,9 @@ export type Mod = {
   sell_price: number;
   slots_taken: number;
 
-  // Em vez de habilidade ativa, o Mod apenas altera o comportamento do equipamento
   gives_bonus_damage: boolean | null;
   gives_bonus_protection: boolean | null;
-  changes_damage_type_to: DamageType | null; // Ex: Conversor Térmico
+  changes_damage_type_to: DamageType | null;
 
   compatible_with: 'WEAPON' | 'ARMOR';
   compatible_with_body_parts_protection: BodyPart[] | null;
@@ -108,7 +104,7 @@ export type Mod = {
   current_durability_level: Durability;
 };
 
-// --- IMPLANTES (Focado em Habilidades Cibernéticas) ---
+// --- IMPLANTES ---
 export type Implant = {
   name: string;
   description: string;
@@ -117,13 +113,13 @@ export type Implant = {
 
   buy_price: number | null;
   sell_price: number;
-  slots_taken: number; // Peso na mochila antes de instalar
+  slots_taken: number;
 
   compatible_with_body_parts: BodyPart[];
   ability: ActiveAbility;
 };
 
-// --- EQUIPAMENTOS TÁTICOS (Gear - Ex: Drones, Granadas) ---
+// --- EQUIPAMENTOS TÁTICOS ---
 export type Gear = {
   name: string;
   description: string;
@@ -140,7 +136,38 @@ export type Gear = {
   ability: ActiveAbility;
 };
 
-// --- CONSUMÍVEIS (Ex: Injetor de Vida, Cilindro de O2) ---
+// --- FERRAMENTAS DE INVASÃO ---
+export type HackTool = {
+  name: string;
+  description: string;
+  appearance: string;
+  type: 'HACK_TOOL';
+
+  buy_price: number | null;
+  sell_price: number;
+  slots_taken: number;
+
+  uses: number;
+  quantity_in_stack: number;
+
+  can_bypass_heavy_locks: boolean;
+};
+
+// --- CHAVES DE ACESSO (NOVO) ---
+export type Key = {
+  name: string;
+  description: string;
+  appearance: string;
+  type: 'KEY';
+
+  buy_price: null; // Chaves não se compram no lobby
+  sell_price: number; // Podem ser vendidas se sobrar
+  slots_taken: number;
+
+  key_id: string; // Ex: 'traxus_sector_3_pass' - Tem que bater com a porta
+};
+
+// --- CONSUMÍVEIS ---
 export type Consumable = {
   name: string;
   description: string;
@@ -150,7 +177,6 @@ export type Consumable = {
   buy_price: number | null;
   sell_price: number;
 
-  // slots_taken reflete O QUANTO CADA UNIDADE PESARÁ no manager de inventário
   slots_taken: number;
   uses: number;
   quantity_in_stack: number;
@@ -158,21 +184,21 @@ export type Consumable = {
   ability: ActiveAbility;
 };
 
-// --- ARTEFATOS (O Loot Principal) ---
+// --- ARTEFATOS ---
 export type Artifact = {
   name: string;
   description: string;
   appearance: string;
   type: 'ARTIFACT';
 
-  buy_price: null; // Artefatos nunca são comprados, apenas vendidos
-  sell_price: number; // Equivalente ao extraction_value
+  buy_price: null;
+  sell_price: number;
   slots_taken: number;
 
   is_prime_artifact: boolean;
 };
 
-// --- NÚCLEOS (Cores - Modificadores diretos da Habilidade da Classe) ---
+// --- NÚCLEOS ---
 export type Core = {
   name: string;
   description: string;
@@ -183,9 +209,8 @@ export type Core = {
   sell_price: number;
   slots_taken: number;
 
-  compatible_with_archetype: ShellArchetype; // Cores SÓ funcionam na classe certa
+  compatible_with_archetype: ShellArchetype;
 
-  // Em um motor TS, o Core pode injetar novos níveis de dano na Habilidade Ativa
   modifies_damage_level_to: DamageLevel | null;
   modifies_utility_type_to: UtilityType | null;
 };

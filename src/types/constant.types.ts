@@ -15,7 +15,8 @@ export type UtilityType =
   | 'STUN'
   | 'STEALTH'
   | 'MOBILITY_BUFF'
-  | 'LOOT_DRONE';
+  | 'LOOT_DRONE'
+  | 'HACK_SYSTEM';
 export type VisionDetail = 'LOW' | 'MEDIUM' | 'HIGH';
 export type RecoveryType = 'HEALTH' | 'OXYGEN' | 'ENERGY';
 
@@ -24,7 +25,6 @@ export type RoomTarget = 'CURRENT_ROOM' | 'NEXT_ROOM' | 'PREVIOUS_ROOM' | 'ANY';
 
 // --- DURABILIDADE E STATUS ---
 export type Durability = 'DESTROYED' | 'DAMAGED' | 'INTACT';
-// Adicionado 'DESTROYED' para Torso/Head (Fatais)
 export type BodyPartStatus = 'INTACT' | 'DAMAGED' | 'SEVERED' | 'DESTROYED' | 'DEACTIVATED';
 
 // --- TIPOS DE ITEM ---
@@ -36,13 +36,15 @@ export type Items =
   | 'GEAR'
   | 'IMPLANT'
   | 'CORE'
-  | 'ARTIFACT';
+  | 'ARTIFACT'
+  | 'HACK_TOOL'
+  | 'KEY'; // NOVO ITEM FÍSICO
 
 // --- PARTES DE CORPO ---
 export type BodyPart = 'HEAD' | 'TORSO' | 'LEFT-ARM' | 'RIGHT-ARM' | 'LEFT-LEG' | 'RIGHT-LEG';
 
 // --- SHELL ---
-export type ShellStatus = 'DAMAGED' | 'DESTROYED' | 'INTACT'; // 50% HP, 0% HP, 100% HP
+export type ShellStatus = 'DAMAGED' | 'DESTROYED' | 'INTACT';
 export type ShellArchetype =
   | 'DESTROYER'
   | 'ASSASSIN'
@@ -51,3 +53,7 @@ export type ShellArchetype =
   | 'THIEF'
   | 'TRIAGE'
   | 'ROOK';
+
+export type RoomCategory = 'OUTDOOR' | 'TRANSITION' | 'HALLWAY' | 'ROOM' | 'DEAD_END';
+export type CoverType = 'NONE' | 'LIGHT' | 'HEAVY';
+export type LockedStatus = 'UNLOCKED' | 'REQUIRES_KEY' | 'REQUIRES_HACK';
