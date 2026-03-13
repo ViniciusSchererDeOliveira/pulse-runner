@@ -57,3 +57,4 @@ export type ShellArchetype =
 export type RoomCategory = 'OUTDOOR' | 'TRANSITION' | 'HALLWAY' | 'ROOM' | 'DEAD_END';
 export type CoverType = 'NONE' | 'LIGHT' | 'HEAVY';
 export type LockedStatus = 'UNLOCKED' | 'REQUIRES_KEY' | 'REQUIRES_HACK';
+export type NPCTier = 'MINION' | 'ELITE' | 'BOSS';
