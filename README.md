@@ -2,7 +2,7 @@
 
 > *"Escape will make me God."*
 
-**PULSE_RUNNER** is a hardcore, tactical, and purely text-based *Extraction Shooter*, powered by Artificial Intelligence.
+**PULSE_RUNNER** is an LLM-driven extraction shooter set in the atmospheric dread of Tau Ceti IV. Heavily inspired by the cryptic lore of the classic *Marathon* trilogy and the high-stakes survival horror of its 2026 revival, this is a hardcore, tactical, and purely text-based experience. Built with TypeScript and a strict data-driven philosophy, the engine translates your tactical military prose into complex game state resolutions.
 
 Forget the graphics. Here, tension is built through dynamic narrative, ruthless resource management, and the absolute weight of every decision you make in the dark.
 
@@ -25,7 +25,7 @@ Unlike traditional text adventures (with A, B, or C options) or static RPGs, PUL
 
 PULSE_RUNNER is a modern experiment in Game Design.
 
-The soul of the game — the cruel combat design, the oppressive sci-fi atmosphere (inspired by genre classics), the punishing economy, and the tactical tension — is purely human.
+The soul of the game — the cruel combat design, the cryptic and oppressive atmosphere, the punishing economy, and the tactical tension — is purely human.
 
 Artificial Intelligence operates on two fronts: as the **builder** of the engineering behind the scenes and as the real-time **interpreter** of your actions (Maestro) and the visual consequences (Narrator). The machine does the math, but the desperation of searching for extraction with 5% O2 is universal.
 
