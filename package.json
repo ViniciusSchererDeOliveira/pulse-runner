@@ -3,21 +3,29 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
+  "imports": {
+    "#engine/*": "./src/engine/*",
+    "#ai/*": "./src/engine/ai/*",
+    "#combat/*": "./src/engine/combat/*",
+    "#types/*": "./src/types/*",
+    "#constants/*": "./src/constants/*",
+    "#scripts/*": "./scripts/*"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test:inference": "npx tsx scripts/tests/models_inference_tests.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ViniciusSchererDeOliveira/pulse-runner.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/ViniciusSchererDeOliveira/pulse-runner/issues"
   },
@@ -31,7 +39,8 @@
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.0"
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^4.1.0"
   },
   "dependencies": {
     "@orama/orama": "^3.1.18",

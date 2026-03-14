@@ -1,4 +1,4 @@
-import type { Armor, Consumable, Weapon } from '../types/items.types.js';
+import type { Armor, Consumable, Weapon } from '@app-types/items.types.js';
 
 // ==========================================
 // ARMAS INICIAIS

@@ -1,3 +1,5 @@
+import type { Shell } from '@app-types/runner.types.js';
+import type { NPC } from '@app-types/enemies.types.js';
 import type {
   Armor,
   Artifact,
@@ -9,14 +11,14 @@ import type {
   Key,
   Mod,
   Weapon,
-} from './items.types.js';
+} from '@app-types/items.types.js';
 import type {
   CoverType,
   Durability,
   LockedStatus,
   RoomCategory,
   WeaponRange,
-} from './constant.types.js';
+} from '@app-types/constant.types.js';
 
 export type RoomExit = {
   direction: 'NORTH' | 'SOUTH' | 'EAST' | 'WEST' | 'LEFT' | 'RIGHT';
@@ -28,7 +30,7 @@ export type RoomExit = {
 export type Container = {
   name: string;
   locked_status: LockedStatus;
-  required_key_id: string | null; // Cofres também podem precisar de chave específica
+  required_key_id: string | null;
   loot: (Weapon | Armor | Consumable | Mod | Gear | Implant | Core | Artifact | HackTool | Key)[];
 };
 
@@ -48,8 +50,8 @@ export type Room = {
 
   ideal_weapon_ranges: WeaponRange[];
 
-  // Conteúdo
-  enemies: string[];
+  // Conteúdo (Agora instanciado com os objetos reais para a Engine calcular a matemática)
+  active_enemies: (NPC | Shell)[];
   containers: Container[];
 
   // Progressão

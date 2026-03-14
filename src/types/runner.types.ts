@@ -8,8 +8,8 @@ import type {
   Implant,
   Mod,
   Weapon,
-} from './items.types.js';
-import type { BodyPartStatus, ShellArchetype, ShellStatus } from './constant.types.js';
+} from '@app-types/items.types.js';
+import type { BodyPartStatus, ShellArchetype, ShellStatus } from '@app-types/constant.types.js';
 
 export type Runner = {
   name: string;

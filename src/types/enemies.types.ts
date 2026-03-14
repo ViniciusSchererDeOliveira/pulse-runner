@@ -6,7 +6,7 @@ import type {
   ProtectionType,
   ShellStatus,
   WeaponRange,
-} from './constant.types.js';
+} from '@app-types/constant.types.js';
 import type {
   Armor,
   Artifact,
@@ -18,7 +18,7 @@ import type {
   Key,
   Mod,
   Weapon,
-} from './items.types.js';
+} from '@app-types/items.types.js';
 
 // ==========================================
 // NPC (Inimigos do Ambiente / Não-Runners)
@@ -32,7 +32,7 @@ export type NPC = {
   tier: NPCTier;
 
   // --- STATUS DE COMBATE ---
-  // Usa o mesmo status de vida da Shell para a matemática bater
+  // Usa o same status de vida da Shell para a matemática bater
   health_status: ShellStatus;
 
   protection_level: ProtectionLevel | null;
@@ -42,6 +42,7 @@ export type NPC = {
   base_damage_level: DamageLevel;
   base_damage_type: DamageType;
   optimal_attack_range: WeaponRange;
+  hit_chance: number; // Equivalente ao 02 do Runner
 
   // --- RECOMPENSAS ---
   // O que cai no chão (Room) quando o Motor TS decreta 'DESTROYED'

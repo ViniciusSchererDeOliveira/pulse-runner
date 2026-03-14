@@ -1,12 +1,12 @@
-import type { Shell, ShellAnatomy } from '../types/runner.types.ts';
-import type { ActiveAbility } from '../types/items.types.ts';
+import type { Shell, ShellAnatomy } from '@app-types/runner.types.js';
+import type { ActiveAbility } from '@app-types/items.types.js';
 import {
   STARTER_ARMOR,
   STARTER_KNIFE,
   STARTER_MEDPATCH,
   STARTER_O2_CYLINDER,
   STARTER_PISTOL,
-} from './starter_items.constants.js';
+} from '@constants/starter_items.constants.js';
 
 // ==========================================
 // BASES E HELPERS (Para evitar repetição de código)

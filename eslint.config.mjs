@@ -23,7 +23,6 @@ export default tseslint.config(
                 projectService: {
                     allowDefaultProject: ['eslint.config.mjs'], // Removi o "./"
                 },
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 tsconfigRootDir: import.meta.dirname,
             },
         },

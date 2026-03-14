@@ -11,7 +11,7 @@ import type {
   UtilityType,
   VisionDetail,
   WeaponRange,
-} from './constant.types.js';
+} from '@app-types/constant.types.js';
 
 export type ActiveAbility = {
   name: string;
