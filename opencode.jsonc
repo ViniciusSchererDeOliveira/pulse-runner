@@ -1,25 +1,22 @@
 {
   "$schema": "https://opencode.ai/config.json",
 
-  // --- MODELOS ---
-  // Substitua pelos IDs exatos que você configurou no seu provedor (via /models no TUI)
-  /*"model": "qwen/qwen-coder-32b-instruct",*/
-
-  // Modelo mais rápido/barato usado pelo OpenCode para tarefas de background (como resumir diffs)
-  /*"small_model": "qwen/qwen-2.5-coder-7b",*/
-
   // --- COMPORTAMENTO ---
   "autoupdate": true,
 
   // --- REGRAS DE CONTEXTO ---
+  // Ao usar Glob Patterns, você obriga a IA a ler tudo isso ANTES do primeiro "Hello".
   "instructions": [
     "AGENTS.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    // Lê todos os SKILL.md dentro das subpastas de skills
+    ".opencode/skills/**/*.md",
+    // (Opcional) Lê qualquer outro .md na raiz do projeto
+    "*.md"
   ],
 
   // --- SISTEMA DE PERMISSÕES (O MAIS IMPORTANTE) ---
   "permission": {
-    // Permite que a IA escreva código, crie arquivos e pesquise pelo repositório livremente
     "edit": "allow",
     "read": "allow",
     "grep": "allow",
