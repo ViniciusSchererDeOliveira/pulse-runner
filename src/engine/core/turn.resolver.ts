@@ -1,9 +1,10 @@
 import type { GameState, TurnState, ToolCall, ToolResult } from '@app-types/game_state.types.js';
 import type { Shell } from '@app-types/runner.types.js';
 import type { NPC } from '@app-types/enemies.types.js';
+import type { AttackResult } from '@app-types/combat.types.js';
 
 // Import extracted modules (SOLID: Dependency Inversion - depend on abstractions)
-import { resolveAttack, type AttackResult } from '../combat/attack.resolver.js';
+import { resolveAttack } from '../combat/attack.resolver.js';
 import { lootContainer } from '../interaction/loot.resolver.js';
 import { hackSystem } from '../interaction/hack.resolver.js';
 import { goToRoom } from '../movement/room.resolver.js';

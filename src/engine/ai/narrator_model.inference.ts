@@ -1,3 +1,5 @@
+import type { StreamResponse } from '@app-types/ai.types.js';
+
 const LM_STUDIO_URL = 'http://127.0.0.1:1234/v1/chat/completions';
 
 const NARRATOR_SYSTEM_PROMPT = `
@@ -15,15 +17,6 @@ RULES:
 Tone: Dark, tactical, unforgiving. "Escape will make you God."
 `;
 
-interface StreamResponse {
-  choices: Array<{
-    delta: {
-      content?: string;
-    };
-  }>;
-}
-
-// O retorno é um AsyncGenerator, permitindo o uso do `for await...of` no front-end ou console
 export async function* inferNarratorOutcome(
   playerInput: string,
   engineLogs: string,

@@ -1,13 +1,8 @@
-import type { ToolCall } from '@app-types/game_state.types.js';
+import type { MaestroResponse, ChatCompletionResponse } from '@app-types/ai.types.js';
 
 const LM_STUDIO_URL = 'http://127.0.0.1:1234/v1/chat/completions';
 
-// Tipagem do retorno esperado pelo Maestro
-export interface MaestroResponse {
-  chain_of_thought: string;
-  tactical_score: number;
-  tool_calls: ToolCall[];
-}
+export type { MaestroResponse } from '@app-types/ai.types.js';
 
 const MAESTRO_SYSTEM_PROMPT = `
 You are the "Maestro", the logical parser and rules engine for PULSE_RUNNER, a hardcore sci-fi text-based extraction shooter. 
@@ -41,14 +36,6 @@ AVAILABLE TOOLS:
 - goToRoom (requires "direction")
 - useItem (requires "item_name")
 `;
-
-interface ChatCompletionResponse {
-  choices: Array<{
-    message: {
-      content: string | null;
-    };
-  }>;
-}
 
 export async function inferMaestroTurn(
   gameStateContext: string,

@@ -1,6 +1,3 @@
-import type { Shell } from '@app-types/runner.types.js';
-import type { NPC } from '@app-types/enemies.types.js';
-import type { Weapon } from '@app-types/items.types.js';
 import type {
   CoverType,
   DamageLevel,
@@ -12,6 +9,7 @@ import type {
   WeaponRange,
   BodyPartStatus,
 } from '@app-types/constant.types.js';
+import type { AttackParams, AttackResult } from '@app-types/combat.types.js';
 
 // --- TIERS BASEADOS EM ESTADOS ---
 export const DAMAGE_TIERS: Record<DamageLevel, number> = {
@@ -39,38 +37,6 @@ export const BODY_PARTS: string[] = [
   'left_leg',
   'right_leg',
 ];
-
-export interface AttackParams {
-  attacker: Shell | NPC;
-  target: Shell | NPC;
-  weapon: Weapon;
-  targetProtectionLevel: ProtectionLevel | 'NONE';
-  targetProtectionType: ProtectionType | 'NONE';
-  targetProtectionDurability: Durability;
-  targetCoverType: CoverType | 'NONE';
-  targetCoverDurability: Durability;
-  roomIdealRanges: WeaponRange[];
-  targetedBodyPart: string;
-  tacticalScore: number; // Player's tactical score for hit chance calculation
-  attackerO2Percentage?: number; // Optional O2 percentage for hit chance calculation
-}
-
-export interface AttackResult {
-  hitChance: number;
-  doesItHit: boolean;
-  /** Which body part was ultimately hit (targeted or random fallback) */
-  hitBodyPart: string;
-  /** Was it a precision hit (true) or a fallback/ricochet hit (false) */
-  isPrecisionHit: boolean;
-  initialDamageTier: number;
-  remainingDamageTier: number;
-  newCoverDurability: Durability;
-  newTargetArmorDurability: Durability;
-  targetHealthAfter: ShellStatus;
-  targetWasInCover: boolean;
-  /** Detailed anatomy damage if target is a Shell */
-  targetAnatomyDamage?: Record<string, BodyPartStatus> | undefined;
-}
 
 /**
  * Calculates hit chance based on tactical score and O2 levels.
