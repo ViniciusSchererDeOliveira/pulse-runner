@@ -1,6 +1,17 @@
 import type { Shell } from '@app-types/runner.types.js';
 import type { Room } from '@app-types/map.types.js';
 
+// --- ESTADO GLOBAL DO JOGO ---
+export type GameState = {
+  run_id: string;
+  turn_history: TurnState[];
+  current_snapshot: {
+    active_shell: Shell;
+    current_room: Room;
+    entities_in_cover: string[];
+  };
+};
+
 // --- TIPAGENS DE SUPORTE PARA AS TOOLS ---
 export type ToolCall = {
   name: string;
@@ -43,6 +54,8 @@ export type TurnState = {
       hit_chance: number;
       does_it_hit: boolean;
       target_was_in_cover: boolean; // Ajuda o Narrador a descrever que a parede absorveu parte do tiro
+      hit_body_part: string; // Which body part was ultimately hit (targeted or random fallback)
+      is_precision_hit: boolean; // Was it a precision hit (true) or a fallback/ricochet hit (false)
     }[];
   };
 

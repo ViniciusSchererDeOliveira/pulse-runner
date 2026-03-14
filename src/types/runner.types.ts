@@ -5,7 +5,9 @@ import type {
   Consumable,
   Core,
   Gear,
+  HackTool,
   Implant,
+  Key,
   Mod,
   Weapon,
 } from '@app-types/items.types.js';
@@ -58,5 +60,16 @@ export type Shell = {
   };
 
   max_backpack_slots: number;
-  backpack: (Weapon | Armor | Consumable | Mod | Gear | Implant | Core | Artifact)[];
+  backpack: (
+    | Weapon
+    | Armor
+    | Consumable
+    | Mod
+    | Gear
+    | Implant
+    | Core
+    | Artifact
+    | HackTool
+    | Key
+  )[];
 };

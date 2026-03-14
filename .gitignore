@@ -30,3 +30,7 @@ coverage/
 # --- OS SPECIFIC ---
 .DS_Store
 Thumbs.db
+
+# --- PROJECT SPECIFIC ---
+commit.sh
+TASK.md

@@ -18,7 +18,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "test:inference": "npx tsx scripts/tests/models_inference_tests.ts"
+    "test:inference": "npx tsx scripts/tests/models_inference_tests.ts",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "repository": {
     "type": "git",
