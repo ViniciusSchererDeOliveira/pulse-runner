@@ -2,7 +2,7 @@
 
 > *"Escape will make me God."*
 
-**PULSE_RUNNER** is an LLM-driven extraction shooter set in the atmospheric dread of Tau Ceti IV. Heavily inspired by the cryptic lore of the classic *Marathon* trilogy and the high-stakes survival horror of its 2026 revival, this is a hardcore, tactical, and purely text-based experience. Built with TypeScript and a strict data-driven philosophy, the engine translates your tactical military prose into complex game state resolutions.
+**PULSE_RUNNER** is an LLM-driven extraction shooter set in the atmospheric dread of Tau Ceti IV. Heavily inspired by the cryptic lore of the classic *Marathon* trilogy and the high-stakes PvPvE extraction mechanics of its 2026 revival, this is a hardcore, tactical, and purely text-based experience. Built with TypeScript and a strict data-driven philosophy, the engine translates your tactical military prose into complex game state resolutions.
 
 Forget the graphics. Here, tension is built through dynamic narrative, ruthless resource management, and the absolute weight of every decision you make in the dark.
 
