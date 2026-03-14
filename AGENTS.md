@@ -129,4 +129,33 @@ The state management system ensures predictable, testable gameplay through rigor
 - Consumable item usage tracking
 - Equipment durability and modification systems
 
+### Map Architecture & Movement
+
+The map uses a strict **Directional Tree** topology instead of a grid:
+
+**Main Branch**:
+
+- **10 rooms** from the starting room (index 0) to the Extraction Point (index 9)
+- **5 additional rooms** extending past the Extraction Point (indices 10-14) for high-risk exploration
+- Total: 15 main branch rooms
+
+**Secondary Branches**:
+
+- **Maximum 2 branches** attached to rooms BEFORE the extraction point (indices 0-8)
+- **Maximum 3 branches** attached to rooms AFTER the extraction point (indices 10-14)
+- Each branch is a linear path of **1-3 rooms** maximum depth
+- No sub-branching allowed (branches cannot have their own branches)
+- The final room of a secondary branch is a dead end (only has the entrance)
+
+**Direction Rule**:
+
+- A room's exit direction(s) must NEVER match the entrance direction used to enter
+- If you enter from the SOUTH, exits must be NORTH, EAST, or WEST
+- This is enforced by the `getValidExits()` and `isValidExit()` functions in `room.resolver.ts`
+
+**Types**:
+
+- All map-related types use `type` aliases (not interfaces)
+- `TreePosition` tracks: `is_main_branch`, `distance_from_start`, `branch_depth`, `branch_id`, `entrance_direction`
+
 This architecture creates a deeply tactical combat system where resource management (especially O2) is as crucial as weapon selection and positioning, with clear separation between decision-making (Maestro), narration (Narrator), and core game mechanics.

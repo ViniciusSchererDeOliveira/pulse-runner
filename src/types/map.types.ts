@@ -20,8 +20,20 @@ import type {
   WeaponRange,
 } from '@app-types/constant.types.js';
 
+export type Direction = 'NORTH' | 'SOUTH' | 'EAST' | 'WEST' | 'LEFT' | 'RIGHT';
+
+export type RoomBranchType = 'main' | 'secondary';
+
+export type TreePosition = {
+  is_main_branch: boolean;
+  distance_from_start: number;
+  branch_depth: number;
+  branch_id: number | null;
+  entrance_direction: Direction | null;
+};
+
 export type RoomExit = {
-  direction: 'NORTH' | 'SOUTH' | 'EAST' | 'WEST' | 'LEFT' | 'RIGHT';
+  direction: Direction;
   target_room_id: string;
   locked_status: LockedStatus;
   required_key_id: string | null;
@@ -57,4 +69,7 @@ export type Room = {
   // Progressão
   is_extraction_point: boolean;
   exits: RoomExit[];
+
+  // Tree Topology
+  tree_position: TreePosition;
 };

@@ -108,6 +108,13 @@ const createMockRoom = (): Room => ({
   containers: [],
   is_extraction_point: false,
   exits: [],
+  tree_position: {
+    is_main_branch: true,
+    distance_from_start: 0,
+    branch_depth: 0,
+    branch_id: null,
+    entrance_direction: null,
+  },
 });
 
 const createMockInitialState = (): GameState => ({

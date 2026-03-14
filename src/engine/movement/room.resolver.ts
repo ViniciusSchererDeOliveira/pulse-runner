@@ -1,28 +1,6 @@
-import type { Room, RoomExit } from '@app-types/map.types.js';
+import type { Room, RoomExit, Direction } from '@app-types/map.types.js';
 import type { Shell } from '@app-types/runner.types.js';
-
-/**
- * Result of a movement operation.
- * Interface Segregation: Focused only on movement outcome.
- */
-export interface MovementResult {
-  success: boolean;
-  message: string;
-  fromRoomId: string;
-  toRoomId?: string;
-  direction?: string;
-  blockedReason?: string;
-}
-
-/**
- * Interface for movement operation parameters.
- * Interface Segregation: Only includes what's needed for movement.
- */
-export interface MovementParams {
-  currentRoom: Room;
-  shell: Shell;
-  direction: string;
-}
+import type { MovementResult, MovementParams } from '@app-types/movement.types.js';
 
 /**
  * Normalizes direction input to standard format.
@@ -195,4 +173,41 @@ export function getExitsDescription(room: Room): string {
   }
 
   return description + '.';
+}
+
+const OPPOSITE_DIRECTION: Record<Direction, Direction> = {
+  NORTH: 'SOUTH',
+  SOUTH: 'NORTH',
+  EAST: 'WEST',
+  WEST: 'EAST',
+  LEFT: 'RIGHT',
+  RIGHT: 'LEFT',
+};
+
+export function getValidExits(room: Room): RoomExit[] {
+  const entranceDir = room.tree_position.entrance_direction;
+  if (!entranceDir) {
+    return room.exits;
+  }
+
+  return room.exits.filter(exit => {
+    const opposite = OPPOSITE_DIRECTION[exit.direction];
+    return exit.direction !== entranceDir && opposite !== entranceDir;
+  });
+}
+
+export function isValidExit(room: Room, direction: string): boolean {
+  const normalizedDir = normalizeDirection(direction) as Direction;
+  const entranceDir = room.tree_position.entrance_direction;
+
+  if (!entranceDir) {
+    return room.exits.some(e => e.direction === normalizedDir);
+  }
+
+  const opposite = OPPOSITE_DIRECTION[normalizedDir];
+  return (
+    normalizedDir !== entranceDir &&
+    opposite !== entranceDir &&
+    room.exits.some(e => e.direction === normalizedDir)
+  );
 }
