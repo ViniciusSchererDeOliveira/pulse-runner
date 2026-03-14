@@ -5,12 +5,12 @@
   "main": "index.js",
   "type": "module",
   "imports": {
-    "#engine/*": "./src/engine/*",
-    "#ai/*": "./src/engine/ai/*",
-    "#combat/*": "./src/engine/combat/*",
-    "#types/*": "./src/types/*",
-    "#constants/*": "./src/constants/*",
-    "#scripts/*": "./scripts/*"
+    "@engine/*": "./src/engine/*",
+    "@ai/*": "./src/engine/ai/*",
+    "@combat/*": "./src/engine/combat/*",
+    "@app-types/*": "./src/types/*",
+    "@constants/*": "./src/constants/*",
+    "@scripts/*": "./scripts/*"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",

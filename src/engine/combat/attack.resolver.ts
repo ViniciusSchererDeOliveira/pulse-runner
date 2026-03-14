@@ -31,7 +31,14 @@ export const PROTECTION_TIERS: Record<ProtectionLevel | CoverType | 'NONE', numb
 } as const;
 
 // Available body parts for fallback ricochet
-export const BODY_PARTS: string[] = ['head', 'torso', 'left_arm', 'right_arm', 'left_leg', 'right_leg'];
+export const BODY_PARTS: string[] = [
+  'head',
+  'torso',
+  'left_arm',
+  'right_arm',
+  'left_leg',
+  'right_leg',
+];
 
 export interface AttackParams {
   attacker: Shell | NPC;
@@ -44,6 +51,7 @@ export interface AttackParams {
   targetCoverDurability: Durability;
   roomIdealRanges: WeaponRange[];
   targetedBodyPart: string;
+  tacticalScore: number; // Player's tactical score for hit chance calculation
   attackerO2Percentage?: number; // Optional O2 percentage for hit chance calculation
 }
 
@@ -65,18 +73,17 @@ export interface AttackResult {
 }
 
 /**
- * Calculates hit chance based on base accuracy and O2 levels.
- * O2 acts as a multiplier - lower O2 reduces effective accuracy.
- * Formula: hitChance = baseAccuracy * (O2Percentage / 100)
- * 
- * @param baseAccuracy - The base accuracy of the attacker (0-100)
+ * Calculates hit chance based on tactical score and O2 levels.
+ * Formula: hitChance = Math.ceil((tacticalScore + currentO2Percentage) / 2)
+ * Hit chance derives entirely from player's tactical choices and physical state.
+ *
+ * @param tacticalScore - The player's tactical score (0-100)
  * @param o2Percentage - Current O2 percentage (0-100), defaults to 100 if not provided
  * @returns The final hit chance (0-100)
  */
-export function calculateHitChance(baseAccuracy: number, o2Percentage: number = 100): number {
-  const o2Multiplier = o2Percentage / 100;
-  const adjustedAccuracy = baseAccuracy * o2Multiplier;
-  return Math.max(0, Math.min(100, adjustedAccuracy));
+export function calculateHitChance(tacticalScore: number, o2Percentage: number = 100): number {
+  const hitChance = Math.ceil((tacticalScore + o2Percentage) / 2);
+  return Math.max(0, Math.min(100, hitChance));
 }
 
 /**
@@ -84,7 +91,7 @@ export function calculateHitChance(baseAccuracy: number, o2Percentage: number = 
  * 1. Global Hit Roll: Roll against hitChance to see if attack connects at all
  * 2. Precision Hit Roll: If Global Hit succeeds, roll against same hitChance to hit targeted body part
  * 3. Fallback: If Precision fails but Global succeeded, hit a random body part (ricochet/graze)
- * 
+ *
  * @param hitChance - The calculated hit chance (0-100)
  * @param globalRoll - Random roll for global hit (0-1), defaults to Math.random()
  * @param precisionRoll - Random roll for precision hit (0-1), defaults to Math.random()
@@ -136,7 +143,7 @@ export function resolveTwoStepHit(
 /**
  * Gets a random body part different from the excluded one.
  * Used for ricochet/graze fallback when precision hit fails.
- * 
+ *
  * @param excludedPart - The body part to exclude (typically the targeted one)
  * @returns A random body part from the remaining options
  */
@@ -230,14 +237,18 @@ export function applyDamageToAnatomy(
 ): Record<string, BodyPartStatus> {
   const clonedAnatomy = { ...anatomy };
   const partKey = bodyPart.toLowerCase();
-  
+
   if (!(partKey in clonedAnatomy)) {
     return clonedAnatomy;
   }
 
   const currentStatus = clonedAnatomy[partKey as keyof typeof clonedAnatomy];
-  
-  if (currentStatus === 'DESTROYED' || currentStatus === 'SEVERED') {
+
+  if (
+    currentStatus === 'DESTROYED' ||
+    currentStatus === 'SEVERED' ||
+    currentStatus === 'DEACTIVATED'
+  ) {
     return clonedAnatomy;
   }
 
@@ -274,18 +285,25 @@ export function resolveAttack(params: AttackParams): AttackResult {
     targetCoverDurability,
     roomIdealRanges,
     targetedBodyPart,
+    tacticalScore,
     attackerO2Percentage,
   } = params;
 
-  const attackerAccuracy = 'hit_chance' in attacker ? attacker.hit_chance : 75;
-  
   // Calculate hit chance with O2 influence
-  const o2Level = attackerO2Percentage ?? ('current_oxygen_percentage' in attacker ? attacker.current_oxygen_percentage : 100);
-  const hitChance = calculateHitChance(attackerAccuracy, o2Level);
-  
+  // Formula: Math.ceil((tacticalScore + currentO2Percentage) / 2)
+  const o2Level =
+    attackerO2Percentage ??
+    ('current_oxygen_percentage' in attacker ? attacker.current_oxygen_percentage : 100);
+  const hitChance = calculateHitChance(tacticalScore, o2Level);
+
   // Two-Step Hit Resolution
-  const hitResolution = resolveTwoStepHit(hitChance, Math.random(), Math.random(), targetedBodyPart);
-  
+  const hitResolution = resolveTwoStepHit(
+    hitChance,
+    Math.random(),
+    Math.random(),
+    targetedBodyPart,
+  );
+
   const { doesItHit, isPrecisionHit, hitBodyPart } = hitResolution;
 
   let remainingTier = 0;

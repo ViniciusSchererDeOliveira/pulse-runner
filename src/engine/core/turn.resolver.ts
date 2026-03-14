@@ -89,6 +89,7 @@ function executeTool(
   state: GameState['current_snapshot'],
   toolCall: ToolCall,
   activeShell: Shell,
+  tacticalScore: number,
 ): {
   updatedState: GameState['current_snapshot'];
   toolResult: ToolResult;
@@ -141,6 +142,7 @@ function executeTool(
         targetProtectionDurability: 'INTACT', // NPCs don't have durability tracking yet
         roomIdealRanges: clonedRoom.ideal_weapon_ranges,
         targetedBodyPart: bodyPart,
+        tacticalScore,
         attackerO2Percentage: clonedShell.current_oxygen_percentage,
       });
 
@@ -324,6 +326,7 @@ export function resolveTurn(
       stateAfter,
       toolCall,
       stateAfter.active_shell,
+      maestroIntent.tactical_score,
     );
 
     stateAfter = updatedState;

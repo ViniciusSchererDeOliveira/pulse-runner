@@ -91,7 +91,6 @@ const createMockNPC = (): NPC => ({
   base_damage_level: 'LIGHT' as DamageLevel,
   base_damage_type: 'PHYSICAL' as DamageType,
   optimal_attack_range: 'SHORT' as WeaponRange,
-  hit_chance: 65,
   guaranteed_loot: [],
 });
 

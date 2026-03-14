@@ -42,7 +42,6 @@ export type NPC = {
   base_damage_level: DamageLevel;
   base_damage_type: DamageType;
   optimal_attack_range: WeaponRange;
-  hit_chance: number; // Equivalente ao 02 do Runner
 
   // --- RECOMPENSAS ---
   // O que cai no chão (Room) quando o Motor TS decreta 'DESTROYED'

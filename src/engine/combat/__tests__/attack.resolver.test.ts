@@ -74,7 +74,6 @@ const createMockNPC = (overrides?: Partial<NPC>): NPC => ({
   base_damage_level: 'LIGHT' as DamageLevel,
   base_damage_type: 'PHYSICAL' as DamageType,
   optimal_attack_range: 'SHORT' as WeaponRange,
-  hit_chance: 75,
   guaranteed_loot: [],
   ...overrides,
 });
@@ -102,40 +101,55 @@ const createMockWeapon = (overrides?: Partial<Weapon>): Weapon => ({
 // ==========================================
 
 describe('calculateHitChance', () => {
-  describe('O2 influence on accuracy', () => {
-    it('should return base accuracy at 100% O2', () => {
-      const result = calculateHitChance(80, 100);
-      expect(result).toBe(80);
+  describe('New Formula: (tacticalScore + O2Percentage) / 2', () => {
+    it('should return 100 at max tactical score and O2', () => {
+      const result = calculateHitChance(100, 100);
+      expect(result).toBe(100);
     });
 
-    it('should reduce hit chance proportionally at 50% O2', () => {
-      const result = calculateHitChance(80, 50);
-      expect(result).toBe(40);
+    it('should return 75 at 50 tactical score and 100 O2', () => {
+      const result = calculateHitChance(50, 100);
+      expect(result).toBe(75);
     });
 
-    it('should severely reduce hit chance at low O2 (10%)', () => {
-      const result = calculateHitChance(90, 10);
-      expect(result).toBe(9);
+    it('should return 75 at 100 tactical score and 50 O2', () => {
+      const result = calculateHitChance(100, 50);
+      expect(result).toBe(75);
     });
 
-    it('should return 0 hit chance at 0% O2', () => {
-      const result = calculateHitChance(100, 0);
-      expect(result).toBe(0);
+    it('should return 50 at 50 tactical score and 50 O2', () => {
+      const result = calculateHitChance(50, 50);
+      expect(result).toBe(50);
+    });
+
+    it('should return 5 at 0 tactical score and 10 O2', () => {
+      const result = calculateHitChance(0, 10);
+      expect(result).toBe(5);
+    });
+
+    it('should return 5 at 10 tactical score and 0 O2', () => {
+      const result = calculateHitChance(10, 0);
+      expect(result).toBe(5);
     });
 
     it('should default to 100% O2 when not provided', () => {
-      const result = calculateHitChance(75);
+      const result = calculateHitChance(50);
       expect(result).toBe(75);
     });
 
     it('should clamp result to maximum 100', () => {
-      const result = calculateHitChance(120, 100);
+      const result = calculateHitChance(100, 100);
       expect(result).toBe(100);
     });
 
     it('should clamp result to minimum 0', () => {
-      const result = calculateHitChance(-10, 100);
+      const result = calculateHitChance(0, 0);
       expect(result).toBe(0);
+    });
+
+    it('should handle edge case with Math.ceil', () => {
+      const result = calculateHitChance(50, 51);
+      expect(result).toBe(51);
     });
   });
 });
@@ -277,70 +291,41 @@ describe('doesAttackHit', () => {
 
 describe('calculateEffectiveDamageTier', () => {
   it('should return base damage tier without modifiers', () => {
-    const tier = calculateEffectiveDamageTier(
-      'HEAVY',
-      'PHYSICAL',
-      'NONE',
-      'MEDIUM',
-      ['LONG'],
-    );
+    const tier = calculateEffectiveDamageTier('HEAVY', 'PHYSICAL', 'NONE', 'MEDIUM', ['LONG']);
     expect(tier).toBe(DAMAGE_TIERS.HEAVY); // 3
   });
 
   it('should add +1 tier when weapon range matches room ideal range', () => {
-    const tier = calculateEffectiveDamageTier(
-      'HEAVY',
-      'PHYSICAL',
-      'NONE',
+    const tier = calculateEffectiveDamageTier('HEAVY', 'PHYSICAL', 'NONE', 'MEDIUM', [
       'MEDIUM',
-      ['MEDIUM', 'LONG'],
-    );
+      'LONG',
+    ]);
     expect(tier).toBe(4); // 3 + 1
   });
 
   it('should subtract -1 tier when damage type matches protection type', () => {
-    const tier = calculateEffectiveDamageTier(
-      'HEAVY',
-      'PHYSICAL',
-      'PHYSICAL',
-      'MEDIUM',
-      ['LONG'],
-    );
+    const tier = calculateEffectiveDamageTier('HEAVY', 'PHYSICAL', 'PHYSICAL', 'MEDIUM', ['LONG']);
     expect(tier).toBe(2); // 3 - 1
   });
 
   it('should apply both range bonus and protection penalty', () => {
-    const tier = calculateEffectiveDamageTier(
-      'HEAVY',
-      'PHYSICAL',
-      'PHYSICAL',
+    const tier = calculateEffectiveDamageTier('HEAVY', 'PHYSICAL', 'PHYSICAL', 'MEDIUM', [
       'MEDIUM',
-      ['MEDIUM'],
-    );
+    ]);
     // 3 (base) + 1 (range) - 1 (protection) = 3
     expect(tier).toBe(3);
   });
 
   it('should not exceed maximum tier of 5', () => {
-    const tier = calculateEffectiveDamageTier(
-      'DEVASTATING',
-      'PHYSICAL',
-      'NONE',
+    const tier = calculateEffectiveDamageTier('DEVASTATING', 'PHYSICAL', 'NONE', 'MEDIUM', [
       'MEDIUM',
-      ['MEDIUM'],
-    );
+    ]);
     // 5 (base) + 1 (range) = 6, but capped at 5
     expect(tier).toBe(5);
   });
 
   it('should not go below minimum tier of 0', () => {
-    const tier = calculateEffectiveDamageTier(
-      'LIGHT',
-      'PHYSICAL',
-      'PHYSICAL',
-      'MELEE',
-      ['LONG'],
-    );
+    const tier = calculateEffectiveDamageTier('LIGHT', 'PHYSICAL', 'PHYSICAL', 'MELEE', ['LONG']);
     // 1 (base) - 1 (protection) = 0
     expect(tier).toBe(0);
   });
@@ -522,6 +507,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
           attackerO2Percentage: 100,
         });
 
@@ -563,6 +549,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'head',
+          tacticalScore: 50,
           attackerO2Percentage: 100,
         });
 
@@ -603,6 +590,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
           attackerO2Percentage: 100,
         });
 
@@ -637,12 +625,13 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
           attackerO2Percentage: 30,
         });
 
-        // At 30% O2 with 75 base accuracy: 75 * 0.3 = 22.5% hit chance
-        // Roll of 0.5 (50) > 22.5 = miss
-        expect(result.hitChance).toBeLessThan(30);
+        // At 30% O2 with 50 tactical score: (50 + 30) / 2 = 40% hit chance
+        // Roll of 0.5 (50) > 40 = miss
+        expect(result.hitChance).toBe(40);
       } finally {
         Math.random = originalRandom;
       }
@@ -664,10 +653,11 @@ describe('resolveAttack', () => {
         targetCoverDurability: 'INTACT',
         roomIdealRanges,
         targetedBodyPart: 'torso',
+        tacticalScore: 50,
         // Not providing attackerO2Percentage - should use attacker.current_oxygen_percentage
       });
 
-      expect(result.hitChance).toBe(37.5); // 75 * 0.5
+      expect(result.hitChance).toBe(50); // (50 + 50) / 2
     });
   });
 
@@ -692,6 +682,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
         });
 
         expect(result.doesItHit).toBe(true);
@@ -723,6 +714,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
         });
 
         expect(result.doesItHit).toBe(true);
@@ -755,6 +747,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
         });
 
         expect(result.doesItHit).toBe(true);
@@ -792,6 +785,7 @@ describe('resolveAttack', () => {
           targetCoverDurability: 'INTACT',
           roomIdealRanges,
           targetedBodyPart: 'torso',
+          tacticalScore: 50,
         });
 
         // Original target should be unchanged
